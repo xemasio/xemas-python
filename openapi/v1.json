@@ -1,0 +1,515 @@
+{
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Authenticated (Authorization: Bearer sk-xemas-<key>) read access to on-chain entity, behaviour, counterparty, portfolio, fund-flow, whale, and contract intelligence.",
+    "title": "XemaS Semantic Intelligence API",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/behaviour/{address}": {
+      "get": {
+        "description": "Behaviour Intelligence: how does this actor behave? Returns the canonical\nBehaviourProfile (every family present; unmeasured families carry their\nreason) wrapped in the v1 envelope. Requires `Authorization: Bearer\nsk-xemas-<key>`; per-key rate limit applies.",
+        "operationId": "v1_behaviour_v1_behaviour__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Behaviour",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/contract/{address}": {
+      "get": {
+        "description": "Contract Intelligence: is the code dangerous? Returns the latest completed\ncanonical scan's contract intelligence - a banded verdict (LOW / MODERATE /\nHIGH / CRITICAL, never SAFE), the canonical contract view, and the canonical\nevidence envelope (verification states + coverage) - wrapped in the v1\nenvelope. When the address has no completed scan, returns 200 with\nstate=\"not_scanned\" and verdict=null (absence is stated, never fabricated).\nWhen the scan's ai_insights carry a governed AI analysis (row 9's\nsolana_scan_ai_insights surface), the response also carries a\n`governance_metadata` envelope slot (gap H10) - omitted entirely for scans\nwith no governed AI-derived content. This endpoint reads; it does not launch\nscans. Requires `Authorization: Bearer sk-xemas-<key>`; per-key rate limit\napplies.",
+        "operationId": "v1_contract_v1_contract__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Contract",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/counterparties/{address}": {
+      "get": {
+        "description": "Counterparty Intelligence: who does this actor transact with? Returns the\ncanonical CounterpartyProfile - attributed counterparties with per-attribution\nevidence, exposure, and coverage - wrapped in the v1 envelope. Requires\n`Authorization: Bearer sk-xemas-<key>`; per-key rate limit applies.",
+        "operationId": "v1_counterparties_v1_counterparties__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Counterparties",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/entity/{address}": {
+      "get": {
+        "description": "Identity Intelligence: who is this on-chain actor? Returns the canonical\nEntityProfile (identity_state in attributed | unattributed | not_measured |\nconflicting) wrapped in the v1 envelope. Requires `Authorization: Bearer\nsk-xemas-<key>`; per-key rate limit applies.",
+        "operationId": "v1_entity_v1_entity__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Entity",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/entity/{address}/history": {
+      "get": {
+        "description": "Resolution history: the last 20 snapshots recorded for this address, newest\nfirst. Each entry shows which entity_id was resolved, which policy version ran,\nwhen it resolved, and how many identity claims contributed. Useful for auditing\nhow an identity evolved over time (e.g. after a new curated row is added).\nRequires `Authorization: Bearer sk-xemas-<key>`.",
+        "operationId": "v1_entity_history_v1_entity__address__history_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Entity History",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/fund-flow/{address}": {
+      "get": {
+        "description": "Fund Flow Intelligence: where did value move? Returns the canonical FlowPath -\nthe dominant outbound path as ordered hops with inherited per-hop evidence, a\nnamed terminal state, and a weakest-link path confidence - wrapped in the v1\nenvelope. Tracing stops at (and never implies movement beyond) a named\nterminal. Requires `Authorization: Bearer sk-xemas-<key>`; per-key rate limit\napplies.",
+        "operationId": "v1_fund_flow_v1_fund_flow__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "depth",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Depth",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Fund Flow",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "description": "Authenticated liveness for the Semantic Intelligence API. Requires a valid\n`Authorization: Bearer sk-xemas-<key>`. Returns the canonical v1 envelope so\nclients can validate the response shape before calling product endpoints.",
+        "operationId": "v1_health_v1_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "V1 Health",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/portfolio/{address}": {
+      "get": {
+        "description": "Portfolio Intelligence: what does this actor hold? Returns the canonical\nPortfolioProfile - allocation by asset class (of PRICED value only),\nconcentration, wealth tier, and a coverage block that states what was priced\nand classified - wrapped in the v1 envelope. Unpriced or unmeasured holdings\nare stated as unknown, never $0. Requires `Authorization: Bearer\nsk-xemas-<key>`; per-key rate limit applies.",
+        "operationId": "v1_portfolio_v1_portfolio__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Portfolio",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    },
+    "/v1/whale/{address}": {
+      "get": {
+        "description": "Market Influence Intelligence: who influences this actor / what is its scale?\nReturns the canonical WhaleProfile - tier identity, a composed story of\nverbatim behaviour sentences, an inherited headline confidence, and stated\ncoverage gaps - wrapped in the v1 envelope. Requires `Authorization: Bearer\nsk-xemas-<key>`; per-key rate limit applies.",
+        "operationId": "v1_whale_v1_whale__address__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "title": "Address",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chain_id",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Chain Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "V1 Whale",
+        "tags": [
+          "Semantic Intelligence API v1",
+          "Semantic Intelligence API v1"
+        ]
+      }
+    }
+  }
+}
