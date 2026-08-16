@@ -5,3 +5,7 @@ dist/
 build/
 *.egg-info/
 .venv/
+
+# Never commit registry credentials. Publishing is done by trusted publishing (OIDC) via
+# .github/workflows/release.yml, which needs no token at all.
+.pypirc
